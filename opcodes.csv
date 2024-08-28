@@ -1,0 +1,3 @@
+opcode,argument_bytes,details
+nop,0,Does nothing.
+halt,0,Exits the program.

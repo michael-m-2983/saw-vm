@@ -1,0 +1,23 @@
+{
+    "env": {
+        "myIncludePath": [
+            "${workspaceFolder}/include",
+            "${workspaceFolder}/src"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "Linux",
+            "compilerPath": "/usr/bin/c99",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/src"
+            ],
+            "cStandard": "c99",
+            "configurationProvider": "ms-vscode.makefile-tools",
+            "mergeConfigurations": true
+        }
+    ],
+    "version": 4,
+    "enableConfigurationSquiggles": true
+}
