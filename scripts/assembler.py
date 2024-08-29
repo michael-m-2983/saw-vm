@@ -10,17 +10,23 @@ def get_opcode(name: str):
     raise SyntaxError("Cannot find opcode '%s'!" % name)
 
 parser = ArgumentParser()
-parser.add_argument("file", help="The .sawasm file to assemble.")
+parser.add_argument("-i", "--input-file", help="The .sawasm file to assemble.", default="main.sawasm")
 parser.add_argument("-o", "--output-file", help="The output file", default="main.saw")
 
 args = parser.parse_args()
 
-with open(args.file, "r", encoding='utf-8') as source_fp:
+with open(args.input_file, "r", encoding='utf-8') as source_fp:
     with open(args.output_file, "wb") as fp:
         lines = [line.strip() for line in source_fp.readlines()]
         out = []
 
         for line in lines:
-            out.append(get_opcode(line))
+            spl = line.split(" ")
+
+            opcode = spl[0]
+            out.append(get_opcode(opcode))
+
+            for arg in spl[1:]:
+                out.append(int(arg))
 
         fp.write(bytes(out))

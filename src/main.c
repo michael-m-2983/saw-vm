@@ -5,6 +5,8 @@
 
 #include "opcode.h"
 #include "error.h"
+#include "types.h"
+#include "stack.h"
 
 int main(int argc, char **argv)
 {
@@ -25,6 +27,9 @@ int main(int argc, char **argv)
     }
 
     int running = 1;
+    saw_stack_t stack;
+
+    saw_stack_init(&stack);
 
     while (running)
     {
@@ -41,14 +46,39 @@ int main(int argc, char **argv)
             SAW_ERROR("Invalid opcode '0x%X'!", opcode);
         }
 
+        saw_byte_t byte;
+
         switch (opcode)
         {
+        case OP_PUSH_BYTE:
+
+            if (fread(&byte, sizeof(saw_byte_t), 1, fp) != sizeof(saw_byte_t))
+                SAW_ERROR("Failed to read a byte!");
+
+            saw_stack_push(&stack, byte);
+
+            printf("Pushing a byte to the stack.\n\t--> %d\n", byte);
+            break;
+        case OP_POP:
+            byte = saw_stack_pop(&stack);
+            printf("Popping a byte from the stack.\n\t<--- %d\n", byte);
+            break;
+        case OP_STACKDUMP:
+            puts("#======== Stack Dump ========#");
+            printf("#\tStack Top:\t%2d   #\n#\t\t\t     #\n", stack.top);
+
+            for (int i = 0; i < stack.top + 1; i++)
+            {
+                printf("#\tStack[%d] =\t%2d   #\n", i, stack.arr[i]);
+            }
+
+            puts("#============================#");
+            break;
         case OP_HALT:
             running = 0;
-            printf("Program exit!\n");
             break;
         default:
-            printf("Opcode: %s\n", OPCODE_NAMES[opcode]);
+            SAW_ERROR("Unimplemented opcode '%s'!", OPCODE_NAMES[opcode]);
             break;
         }
     }

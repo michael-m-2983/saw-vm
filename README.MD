@@ -14,7 +14,7 @@ git clone https://github.com/michael-m-2983/saw-vm.git
 # Create a bytecode file
 echo "nop" >> main.sawasm
 echo "halt" >> main.sawasm
-python3 scripts/assembler.py -o main.saw main.sawasm
+python3 scripts/assembler.py
 
 # Build the VM
 make
