@@ -1,5 +1,6 @@
 opcode,argument_bytes,details
 nop,0,Does nothing.
+dup,0,Duplicates the top element on the stack
 pop,0,Pops a byte off of the top of the stack.
 push_byte,1,Pushes a byte to the top of the stack.
 stackdump,0,A temporary opcode that prints the stack to stdout.

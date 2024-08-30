@@ -63,6 +63,12 @@ int main(int argc, char **argv)
             byte = saw_stack_pop(&stack);
             printf("Popping a byte from the stack.\n\t<--- %d\n", byte);
             break;
+	case OP_DUP:
+	    byte = saw_stack_pop(&stack);
+	    printf("Duplicated byte on stack\n\t<--> %d\n", byte);
+	    saw_stack_push(&stack, byte);
+	    saw_stack_push(&stack, byte);
+	    break;
         case OP_STACKDUMP:
             puts("#======== Stack Dump ========#");
             printf("#\tStack Top:\t%2d   #\n#\t\t\t     #\n", stack.top);
