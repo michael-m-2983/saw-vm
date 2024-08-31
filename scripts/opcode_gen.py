@@ -36,7 +36,7 @@ typedef uint8_t opcode_t;
 /**
  * A string array of all opcode names.
  */
-const char *OPCODE_NAMES[] = {
+static const char *OPCODE_NAMES[] = {
 {{opcode_names}}
 };
 
