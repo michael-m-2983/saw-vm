@@ -17,8 +17,6 @@ void saw_insn_push(vm_t *vm)
         SAW_ERROR("Failed to read a byte!");
 
     saw_stack_push(&vm->stack, byte);
-
-    printf("Pushing a byte to the stack.\n\t--> %d\n", byte);
 }
 
 void saw_insn_dup(vm_t *vm)
@@ -27,6 +25,30 @@ void saw_insn_dup(vm_t *vm)
 
     saw_stack_push(&vm->stack, byte);
     saw_stack_push(&vm->stack, byte);
+}
+
+void saw_insn_add(vm_t *vm)
+{
+    saw_byte_t b = saw_stack_pop(&vm->stack);
+    saw_byte_t a = saw_stack_pop(&vm->stack);
+
+    saw_stack_push(&vm->stack, a + b);
+}
+
+void saw_insn_sub(vm_t *vm)
+{
+    saw_byte_t b = saw_stack_pop(&vm->stack);
+    saw_byte_t a = saw_stack_pop(&vm->stack);
+
+    saw_stack_push(&vm->stack, a - b);
+}
+
+void saw_insn_multiply(vm_t *vm)
+{
+    saw_byte_t b = saw_stack_pop(&vm->stack);
+    saw_byte_t a = saw_stack_pop(&vm->stack);
+
+    saw_stack_push(&vm->stack, a * b);
 }
 
 void saw_insn_stackdump(vm_t *vm)
@@ -54,14 +76,25 @@ void saw_vm_step(vm_t *vm)
 
     switch (opcode)
     {
+    case OP_NOP:
+        break;
     case OP_PUSH_BYTE:
         saw_insn_push(vm);
         break;
     case OP_POP:
-        printf("Popping a byte from the stack.\n\t<--- %d\n", saw_stack_pop(&vm->stack));
+        saw_stack_pop(&vm->stack);
         break;
     case OP_DUP:
         saw_insn_dup(vm);
+        break;
+    case OP_ADD:
+        saw_insn_add(vm);
+        break;
+    case OP_SUB:
+        saw_insn_sub(vm);
+        break;
+    case OP_MULTIPLY:
+        saw_insn_multiply(vm);
         break;
     case OP_STACKDUMP:
         saw_insn_stackdump(vm);

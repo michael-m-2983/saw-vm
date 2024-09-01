@@ -2,6 +2,9 @@ opcode,argument_bytes,details
 nop,0,Does nothing.
 dup,0,Duplicates the top element on the stack
 pop,0,Pops a byte off of the top of the stack.
+add,0,Adds the top 2 bytes on the stack.
+sub,0,Subtracts the first 2 bytes on the stack. The lowest one is the first operand.
+multiply,0,Multiplies the first 2 bytes on the stack.
 push_byte,1,Pushes a byte to the top of the stack.
 stackdump,0,A temporary opcode that prints the stack to stdout.
 halt,0,Exits the program.

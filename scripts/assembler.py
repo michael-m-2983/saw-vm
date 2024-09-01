@@ -21,6 +21,10 @@ with open(args.input_file, "r", encoding='utf-8') as source_fp:
         out = []
 
         for line in lines:
+            if line.startswith("#"): # support for comments
+                continue
+            if len(line.strip()) == 0: # whitespace
+                continue
             spl = line.split(" ")
 
             opcode = spl[0]
