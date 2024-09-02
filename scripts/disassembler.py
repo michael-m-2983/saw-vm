@@ -16,12 +16,14 @@ def get_opcode_by_id(id):
 
 with open(args.bytecode, "rb") as fp:
     while True:
+        offset = fp.tell()
         opcode = int.from_bytes(fp.read(1))
 
-        args = [str(int.from_bytes(fp.read(1)))
+        args = [f"0x{int.from_bytes(fp.read(1)):x}"
                 for n in range(int(OPCODES[opcode]['argument_bytes']))]
 
-        print(f"{OPCODES[opcode]['opcode']} {' '.join(args)}")
+
+        print(f"0x{offset:X} {OPCODES[opcode]['opcode']} {' '.join(args)}")
 
         if OPCODES[opcode]['opcode'] == 'halt':
             break

@@ -1,3 +1,6 @@
+// If this is defined, the vm acts like a debugger.
+#define SAW_DEBUG_MODE
+
 #include "vm.h"
 
 #include <stdio.h>
@@ -9,6 +12,7 @@
 #include "error.h"
 #include "types.h"
 #include "stack.h"
+#include "debugger.h"
 
 int main(int argc, char **argv)
 {
@@ -25,8 +29,12 @@ int main(int argc, char **argv)
 
     saw_vm_init(&vm, fp);
 
+#ifdef SAW_DEBUG_MODE
+    saw_debugger(&vm);
+#else
     while (vm.running)
         saw_vm_step(&vm);
+#endif
 
     if (fp != stdin)
         fclose(fp);

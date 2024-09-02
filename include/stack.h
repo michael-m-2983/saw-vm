@@ -2,12 +2,12 @@
 #define STACK_H
 
 #ifndef SAW_STACK_MAX_HEIGHT
-#define SAW_STACK_MAX_HEIGHT 50
+#define SAW_STACK_MAX_HEIGHT 20
 #endif
 
 #include "types.h"
 
-typedef saw_byte_t saw_stack_element_t;
+typedef saw_long_t saw_stack_element_t;
 
 typedef struct
 {
