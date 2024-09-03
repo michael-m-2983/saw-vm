@@ -1,6 +1,3 @@
-// If this is defined, the vm acts like a debugger.
-#define SAW_DEBUG_MODE
-
 #include "vm.h"
 
 #include <stdio.h>
@@ -21,6 +18,12 @@ int main(int argc, char **argv)
 
     if (argc < 2)
         SAW_ERROR("Usage: %s bytecode.saw", argv[0]);
+
+#ifdef SAW_DEBUG_MODE
+    if (strncmp(argv[1], "-", 1) == 0)
+        SAW_ERROR("You cannot pass input from stdin while using the debugger. "
+                  "Recompile without SAW_DEBUG_MODE defined.");
+#endif
 
     fp = strncmp(argv[1], "-", 1) ? fopen(argv[1], "rb") : stdin;
 

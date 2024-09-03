@@ -1,3 +1,4 @@
+#ifdef SAW_DEBUG_MODE
 #include "debugger.h"
 
 #include <string.h>
@@ -9,8 +10,9 @@
 void saw_debugger(vm_t *vm)
 {
     char command[20];
+    int debugger_running = 1;
 
-    while (1)
+    while (debugger_running)
     {
         fprintf(stdout, ">>> ");
         fflush(stdout);
@@ -33,9 +35,18 @@ void saw_debugger(vm_t *vm)
                 while (vm->running)
                     saw_vm_step(vm);
             }
+            else if (c == 'b') // Execute all instructions until next breakpoint
+            {
+                saw_short_t initial_breakpoint_count = vm->breakpoint_count;
+                while (vm->running && vm->breakpoint_count == initial_breakpoint_count)
+                {
+                    saw_vm_step(vm);
+                }
+            }
             else if (c == 'q') // Exit
             {
                 vm->running = 0;
+                debugger_running = 0;
                 break;
             }
             else if (c == 's') // Stack dump
@@ -45,3 +56,5 @@ void saw_debugger(vm_t *vm)
         }
     }
 }
+
+#endif

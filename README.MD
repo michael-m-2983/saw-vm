@@ -19,6 +19,10 @@ python3 scripts/assembler.py
 # Build the VM
 make
 
-# Run the bytecode file
+# Start the VM
 ./saw main.saw
+
+# If the debugger is enabled, run all of the commands
+# If it is not enabled this is not needed.
+>>> N
 ```

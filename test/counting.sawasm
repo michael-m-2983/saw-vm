@@ -1,0 +1,20 @@
+%define MAX 50
+
+# starting at 0
+push_byte 0
+
+%check dup
+push_byte %MAX
+sub
+push_byte %end
+swap
+branch_if_zero
+
+%add push_byte 1
+add
+stackprint
+
+push_byte %check
+branch
+
+%end halt

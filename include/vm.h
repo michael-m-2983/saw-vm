@@ -4,15 +4,20 @@
 #include <stdio.h>
 #include "stack.h"
 
-typedef struct {
+typedef struct
+{
     int running;
     saw_stack_t stack;
     FILE *fp;
+
+#ifdef SAW_DEBUG_MODE
+    saw_short_t breakpoint_count;
+#endif
 } vm_t;
 
 /**
  * Initializes a new vm.
- * 
+ *
  * @param vm The vm to initialize.
  * @param fp The bytecode file to read from.
  */
@@ -20,14 +25,14 @@ void saw_vm_init(vm_t *vm, FILE *fp);
 
 /**
  * Executes a single bytecode instruction.
- * 
+ *
  * @param vm The vm.
  */
 void saw_vm_step(vm_t *vm);
 
 /**
  * Frees a vm_t.
- * 
+ *
  * @param vm The vm.
  */
 void saw_vm_free(vm_t *vm);

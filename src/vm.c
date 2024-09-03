@@ -73,15 +73,28 @@ void saw_insn_stackdump(vm_t *vm)
     puts("#============================#");
 }
 
+void saw_insn_stackprint(vm_t *vm) {
+    printf("%d\n", vm->stack.arr[vm->stack.top]);
+}
+
 void saw_insn_branch(vm_t *vm)
 {
     saw_long_t offset = saw_stack_pop(&vm->stack);
     fseek(vm->fp, offset, 0);
 }
 
+void saw_insn_branch_if_zero(vm_t *vm)
+{
+    saw_stack_element_t conditional = saw_stack_pop(&vm->stack);
+    saw_long_t offset = saw_stack_pop(&vm->stack);
+
+    if (conditional == 0)
+        fseek(vm->fp, offset, 0);
+}
+
 void saw_insn_push_ip(vm_t *vm)
 {
-    long ip = ftell(vm->fp) - 1; // Gets the current ip
+    long ip = ftell(vm->fp) - 1;    // Gets the current ip
     saw_stack_push(&vm->stack, ip); // We want to push the offset of the next instruction.
 }
 
@@ -96,7 +109,9 @@ void saw_vm_step(vm_t *vm)
     if (opcode < OPCODE_MIN || opcode > OPCODE_MAX)
         SAW_ERROR("Invalid opcode '0x%X'!", opcode);
 
-    printf("[saw-vm]: 0x%X %s stack=%d\n", offset, OPCODE_NAMES[opcode], vm->stack.top + 1);
+#ifdef SAW_DEBUG_MODE
+    fprintf(stderr, "[saw-vm]: 0x%X %s stack=%d\n", offset, OPCODE_NAMES[opcode], vm->stack.top + 1);
+#endif
 
     switch (opcode)
     {
@@ -126,11 +141,22 @@ void saw_vm_step(vm_t *vm)
     case OP_STACKDUMP:
         saw_insn_stackdump(vm);
         break;
+    case OP_STACKPRINT:
+        saw_insn_stackprint(vm);
+        break;
     case OP_BRANCH:
         saw_insn_branch(vm);
         break;
+    case OP_BRANCH_IF_ZERO:
+        saw_insn_branch_if_zero(vm);
+        break;
     case OP_PUSH_IP:
         saw_insn_push_ip(vm);
+        break;
+    case OP_BREAKPOINT:
+#ifdef SAW_DEBUG_MODE
+        vm->breakpoint_count += 1;
+#endif
         break;
     case OP_HALT:
         vm->running = 0;
