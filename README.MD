@@ -6,7 +6,8 @@ stack-based bytecode virtual machine
 
 ```bash
 # Install requirements
-sudo apt install build-essential python3
+sudo apt install build-essential python3 # Debian, Ubuntu, etc.
+sudo pacman -S make gcc python3 # Arch-based distros
 
 # Clone this repository
 git clone https://github.com/michael-m-2983/saw-vm.git

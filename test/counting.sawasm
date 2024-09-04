@@ -5,7 +5,7 @@ push_byte 0
 
 %check dup
 push_byte %MAX
-sub
+subtract
 push_byte %end
 swap
 branch_if_zero

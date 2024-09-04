@@ -3,7 +3,7 @@ include/opcode.h
 
 *.saw
 *.sawasm
-!test/counting.sawasm
+!test/*.sawasm
 
 # Files marked as local
 **/**.local**

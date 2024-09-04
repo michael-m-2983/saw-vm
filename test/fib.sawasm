@@ -1,0 +1,18 @@
+# This prints Fibonacci numbers forever.
+# It exceeds the long integer limit very quickly, I suggest writing stdout to a file to verify that it works.
+
+# Push initial numbers
+push_byte 0
+push_byte 1
+
+%loop stackprint
+dup_double
+add
+swapdown 2
+pop
+swap
+
+push_byte %loop
+branch
+
+halt

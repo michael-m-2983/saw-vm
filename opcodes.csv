@@ -1,11 +1,22 @@
 opcode,argument_bytes,details
 nop,0,Does nothing.
 dup,0,Duplicates the top element on the stack.
+dup_double,0,Duplicates the top 2 elements on the stack, and places them on the top.
 swap,0,Swaps the top 2 elements of the stack.
+swapdown,1,Swaps the top element on the stack with the element that is N elements from the top.
 pop,0,Pops a byte off of the top of the stack.
 add,0,Adds the top 2 bytes on the stack.
-sub,0,Subtracts the first 2 bytes on the stack. The lowest one is the first operand.
+subtract,0,Subtracts the first 2 bytes on the stack. The lowest one is the first operand.
 multiply,0,Multiplies the first 2 bytes on the stack.
+divide,0,Divides the first 2 bytes on the stack. The lowest is the numerator.
+negate,0,Negates the top element of the stack.
+increment,1,A shortcut to increment the top byte on the stack by the specified argument.
+bitwise_not,0,Performs bitwise NOT on the top element of the stack.
+bitwise_and,0,Performs bitwise AND on the top 2 elements of the stack.
+bitwise_or,0,Performs bitwise OR on the top 2 elements of the stack.
+bitwise_xor,0,Performs bitwise XOR (exclusive or) on the top 2 elements of the stack.
+sqrt,0,Pushes the square root of the top element on the stack.
+abs,0,Pushes the absolute value of the top element on the stack.
 push_byte,1,Pushes a byte to the top of the stack.
 push_ip,0,Pushes the current offset onto the stack.
 branch,0,Branches to the offset indicated on the top of the stack.
