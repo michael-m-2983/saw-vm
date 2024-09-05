@@ -158,34 +158,14 @@ void saw_insn_swap(vm_t *vm)
 
 void saw_insn_swapdown(vm_t *vm)
 {
-    // Get N
-    saw_byte_t n;
+    saw_byte_t n; // The swapdown argument / how far down to swap the top with
 
     if (fread(&n, sizeof(saw_byte_t), 1, vm->fp) != sizeof(saw_byte_t))
         SAW_ERROR("Failed to read swapdown byte!");
 
-    // Pop the top
-    saw_stack_element_t top = saw_stack_pop(&vm->stack);
-
-    // Pop the others
-    saw_stack_element_t *middle = malloc(sizeof(saw_stack_element_t) * (n - 1));
-    for (int i = 0; i < n - 1; i++)
-        middle[i] = saw_stack_pop(&vm->stack);
-
-    // Pop the target
-    saw_stack_element_t target = saw_stack_pop(&vm->stack);
-
-    // Push old top
-    saw_stack_push(&vm->stack, top);
-
-    // Push the in-between ones
-    for (int i = n - 2; i >= 0; i--)
-        saw_stack_push(&vm->stack, middle[i]);
-
-    // Push the target
-    saw_stack_push(&vm->stack, target);
-
-    free(middle);
+    saw_stack_element_t tmp = vm->stack.arr[vm->stack.top];
+    vm->stack.arr[vm->stack.top] = vm->stack.arr[vm->stack.top - n];
+    vm->stack.arr[vm->stack.top - n] = tmp;
 }
 
 void saw_insn_add(vm_t *vm)

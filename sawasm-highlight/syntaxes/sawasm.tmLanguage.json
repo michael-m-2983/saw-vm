@@ -1,0 +1,28 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "SawASM",
+	"patterns": [
+		{
+			"name": "comment.line.sawasm",
+			"match": "#.*$"
+		},
+		{
+			"name": "keyword.control.sawasm",
+			"match": "\\b([a-z_]*)\\b"
+		},
+		{
+			"name": "constant.numeric.sawasm",
+			"match": "\\b\\d+\\b"
+		},
+		{
+			"name": "variable.parameter.sawasm",
+			"match": "%[a-z_]*"
+		},
+		{
+			"name": "constant.other.sawasm",
+			"match": "%[a-z_]*"
+		}
+	],
+	"repository": {},
+	"scopeName": "source.sawasm"
+}

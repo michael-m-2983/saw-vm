@@ -1,7 +1,7 @@
 opcode,argument_bytes,details
 nop,0,Does nothing.
 dup,0,Duplicates the top element on the stack.
-dup_double,0,Duplicates the top 2 elements on the stack, and places them on the top.
+dup_double,0,Duplicates the top 2 elements on the stack\, and places them on the top.
 swap,0,Swaps the top 2 elements of the stack.
 swapdown,1,Swaps the top element on the stack with the element that is N elements from the top.
 pop,0,Pops a byte off of the top of the stack.
