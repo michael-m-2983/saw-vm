@@ -1,7 +1,7 @@
 opcode,argument_bytes,details
 nop,0,Does nothing.
 dup,0,Duplicates the top element on the stack.
-dup_double,0,Duplicates the top 2 elements on the stack\, and places them on the top.
+dup_double,0,"Duplicates the top 2 elements on the stack, and places them on the top."
 swap,0,Swaps the top 2 elements of the stack.
 swapdown,1,Swaps the top element on the stack with the element that is N elements from the top.
 pop,0,Pops a byte off of the top of the stack.
@@ -21,6 +21,8 @@ push_byte,1,Pushes a byte to the top of the stack.
 push_ip,0,Pushes the current offset onto the stack.
 branch,0,Branches to the offset indicated on the top of the stack.
 branch_if_zero,0,Branches to the offset below the top of the stack if the element on the top of the stack is zero.
+branch_if_positive,0,Branches to the offset below the top of the stack if the element on the top of the stack is greater but not equal to zero.
+branch_if_equal,0,Branches to the offset indicated by the third highest stack element if the two above it are equal.
 stackdump,0,A temporary opcode that prints the stack to stdout.
 stackprint,0,Prints the top element of the stack to stdout.
 breakpoint,0,A breakpoint for the debugger.

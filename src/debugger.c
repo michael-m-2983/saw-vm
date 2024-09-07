@@ -53,6 +53,11 @@ void saw_debugger(vm_t *vm)
             {
                 saw_insn_stackdump(vm);
             }
+            else if (c == 'o') // Print offset
+            {
+                const long offset = ftell(vm->fp);
+                fprintf(stdout, "[Offset]: %ld / 0x%lX\n", offset, offset);
+            }
         }
     }
 }

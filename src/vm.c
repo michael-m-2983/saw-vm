@@ -27,91 +27,7 @@ void saw_vm_step(vm_t *vm)
     fprintf(stderr, "[saw-vm]: 0x%lX %s stack=%d\n", offset, OPCODE_NAMES[opcode], vm->stack.top + 1);
 #endif
 
-    switch (opcode)
-    {
-    case OP_NOP:
-        break;
-    case OP_PUSH_BYTE:
-        saw_insn_push_byte(vm);
-        break;
-    case OP_POP:
-        saw_stack_pop(&vm->stack);
-        break;
-    case OP_DUP:
-        saw_insn_dup(vm);
-        break;
-    case OP_DUP_DOUBLE:
-        saw_insn_dup_double(vm);
-        break;
-    case OP_SWAP:
-        saw_insn_swap(vm);
-        break;
-    case OP_SWAPDOWN:
-        saw_insn_swapdown(vm);
-        break;
-    case OP_ADD:
-        saw_insn_add(vm);
-        break;
-    case OP_SUBTRACT:
-        saw_insn_subtract(vm);
-        break;
-    case OP_MULTIPLY:
-        saw_insn_multiply(vm);
-        break;
-    case OP_DIVIDE:
-        saw_insn_divide(vm);
-        break;
-    case OP_NEGATE:
-        saw_insn_negate(vm);
-        break;
-    case OP_INCREMENT:
-        saw_insn_increment(vm);
-        break;
-    case OP_BITWISE_NOT:
-        saw_insn_bitwise_not(vm);
-        break;
-    case OP_BITWISE_AND:
-        saw_insn_bitwise_and(vm);
-        break;
-    case OP_BITWISE_OR:
-        saw_insn_bitwise_or(vm);
-        break;
-    case OP_BITWISE_XOR:
-        saw_insn_bitwise_xor(vm);
-        break;
-    case OP_SQRT:
-        saw_insn_sqrt(vm);
-        break;
-    case OP_ABS:
-        saw_insn_abs(vm);
-        break;
-    case OP_STACKDUMP:
-        saw_insn_stackdump(vm);
-        break;
-    case OP_STACKPRINT:
-        saw_insn_stackprint(vm);
-        break;
-    case OP_BRANCH:
-        saw_insn_branch(vm);
-        break;
-    case OP_BRANCH_IF_ZERO:
-        saw_insn_branch_if_zero(vm);
-        break;
-    case OP_PUSH_IP:
-        saw_insn_push_ip(vm);
-        break;
-    case OP_BREAKPOINT:
-#ifdef SAW_DEBUG_MODE
-        vm->breakpoint_count += 1;
-#endif
-        break;
-    case OP_HALT:
-        vm->running = 0;
-        break;
-    default:
-        SAW_ERROR("Unimplemented opcode '%s'!", OPCODE_NAMES[opcode]);
-        break;
-    }
+    saw_insn(vm, opcode);
 }
 
 void saw_vm_free(vm_t *vm)
@@ -127,6 +43,23 @@ void saw_insn_push_byte(vm_t *vm)
         SAW_ERROR("Failed to read a byte!");
 
     saw_stack_push(&vm->stack, (saw_stack_element_t)byte);
+}
+
+void saw_insn_nop(vm_t *vm)
+{
+    // Do nothing
+}
+
+void saw_insn_pop(vm_t *vm)
+{
+    saw_stack_pop(&vm->stack);
+}
+
+void saw_insn_breakpoint(vm_t *vm)
+{
+#ifdef SAW_DEBUG_MODE
+    vm->breakpoint_count += 1;
+#endif
 }
 
 void saw_insn_dup(vm_t *vm)
@@ -289,8 +222,37 @@ void saw_insn_branch_if_zero(vm_t *vm)
         fseek(vm->fp, offset, 0);
 }
 
+void saw_insn_branch_if_positive(vm_t *vm)
+{
+    saw_stack_element_t number = saw_stack_pop(&vm->stack);
+
+    saw_long_t offset = saw_stack_pop(&vm->stack);
+
+    if (number > 0)
+        fseek(vm->fp, offset, 0);
+}
+
+void saw_insn_branch_if_equal(vm_t *vm)
+{
+    saw_stack_element_t b = saw_stack_pop(&vm->stack);
+    saw_stack_element_t a = saw_stack_pop(&vm->stack);
+
+    saw_long_t offset = saw_stack_pop(&vm->stack);
+
+    if (a == b)
+        fseek(vm->fp, offset, 0);
+}
+
 void saw_insn_push_ip(vm_t *vm)
 {
-    long ip = ftell(vm->fp) - 1;    // Gets the current ip
+    long ip = ftell(vm->fp) - 1;    // Gets the current instruction pointer
     saw_stack_push(&vm->stack, ip); // We want to push the offset of the next instruction.
+}
+
+void saw_insn_halt(vm_t *vm) {
+    vm->running = 0;
+}
+
+void saw_insn_unknown(vm_t *vm, opcode_t opcode) {
+    SAW_ERROR("Unknown opcode '0x%X'! (decimal=%d)", opcode, opcode);
 }
