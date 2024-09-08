@@ -5,10 +5,8 @@
 #include <errno.h>
 #include <string.h>
 
-#include "opcode.h"
 #include "error.h"
 #include "types.h"
-#include "stack.h"
 #include "debugger.h"
 
 int main(int argc, char **argv)

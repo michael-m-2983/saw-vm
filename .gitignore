@@ -12,6 +12,9 @@ src/opcode.c
 # VM Binary files
 saw
 
+# VM Dump files
+**/*.dump
+
 # IDE Files - some are ok
 .vscode/*
 !.vscode/c_cpp_properties.json

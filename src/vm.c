@@ -96,6 +96,9 @@ void saw_insn_swapdown(vm_t *vm)
     if (fread(&n, sizeof(saw_byte_t), 1, vm->fp) != sizeof(saw_byte_t))
         SAW_ERROR("Failed to read swapdown byte!");
 
+    if(n < 0) SAW_ERROR("Cannot execute swapdown instruction: Stack underreach! Cannot swapdown negative by negative amounts. (n=%d, stack_top=%d)", n, vm->stack.top);
+    if(n > vm->stack.top) SAW_ERROR("Cannot execute swapdown instruction: Stack overreach! (n=%d, stack_top=%d)", n, vm->stack.top);
+
     saw_stack_element_t tmp = vm->stack.arr[vm->stack.top];
     vm->stack.arr[vm->stack.top] = vm->stack.arr[vm->stack.top - n];
     vm->stack.arr[vm->stack.top - n] = tmp;
@@ -186,7 +189,7 @@ void saw_insn_sqrt(vm_t *vm)
 
 void saw_insn_abs(vm_t *vm)
 {
-    saw_stack_push(&vm->stack, abs(saw_stack_pop(&vm->stack)));
+    saw_stack_push(&vm->stack, labs(saw_stack_pop(&vm->stack)));
 }
 
 void saw_insn_stackdump(vm_t *vm)

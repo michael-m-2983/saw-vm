@@ -16,7 +16,7 @@ void saw_debugger(vm_t *vm)
     {
         fprintf(stdout, ">>> ");
         fflush(stdout);
-        scanf("%20s", command);
+        scanf("%19s", command);
 
         const size_t command_length = strlen(command);
         if (command_length > 20)
@@ -57,6 +57,14 @@ void saw_debugger(vm_t *vm)
             {
                 const long offset = ftell(vm->fp);
                 fprintf(stdout, "[Offset]: %ld / 0x%lX\n", offset, offset);
+            }
+            else if (c == 'd') // Create vm dump
+            {
+                FILE *fp = fopen("saw-vm.dump", "wb");
+                fwrite(vm, sizeof(vm_t), 1, fp);
+                fclose(fp);
+            } else {
+                printf("Unsupported debugger instruction '%c'!\n", c);
             }
         }
     }
