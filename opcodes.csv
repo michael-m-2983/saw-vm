@@ -18,6 +18,9 @@ bitwise_xor,0,Performs bitwise XOR (exclusive or) on the top 2 elements of the s
 sqrt,0,Pushes the square root of the top element on the stack.
 abs,0,Pushes the absolute value of the top element on the stack.
 push_byte,1,Pushes a byte to the top of the stack.
+create_array,1,Creates an array with a specified length.
+update_array,0,"Updates an item in an array. Arguments from top to bottom: the array, the index, the byte to set it to."
+destroy_array,0,Destroys the array on the top of the stack.
 push_ip,0,Pushes the current offset onto the stack.
 branch,0,Branches to the offset indicated on the top of the stack.
 branch_if_zero,0,Branches to the offset below the top of the stack if the element on the top of the stack is zero.
@@ -25,5 +28,6 @@ branch_if_positive,0,Branches to the offset below the top of the stack if the el
 branch_if_equal,0,Branches to the offset indicated by the third highest stack element if the two above it are equal.
 stackdump,0,A temporary opcode that prints the stack to stdout.
 stackprint,0,Prints the top element of the stack to stdout.
+call,2,"Calls a function. The arguments from first to last are the name of the function, the type string (like Java, not documented yet), and the type of call, which is always one for now."
 breakpoint,0,A breakpoint for the debugger.
 halt,0,Exits the program.

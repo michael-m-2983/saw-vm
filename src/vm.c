@@ -1,6 +1,7 @@
 #include "vm.h"
 #include "opcode.h"
 #include "error.h"
+#include "stack.h"
 #include <math.h>
 
 void saw_vm_init(vm_t *vm, FILE *fp)
@@ -250,6 +251,78 @@ void saw_insn_push_ip(vm_t *vm)
 {
     long ip = ftell(vm->fp) - 1;    // Gets the current instruction pointer
     saw_stack_push(&vm->stack, ip); // We want to push the offset of the next instruction.
+}
+
+void saw_insn_create_array(vm_t *vm) {
+    saw_byte_t size;
+
+    if(fread(&size, sizeof(size), 1, vm->fp) != sizeof(size))
+        SAW_ERROR("Failed to read size when creating array!");
+
+    //TODO: validate the size more, or perhaps do this in another way.
+
+    saw_stack_push(&vm->stack, (saw_stack_element_t) calloc(sizeof(saw_stack_element_t), size));
+}
+
+void saw_insn_update_array(vm_t *vm) {
+    saw_stack_element_t data, index, array_ptr;
+
+    data = saw_stack_pop(&vm->stack);
+    index = saw_stack_pop(&vm->stack);
+    array_ptr = saw_stack_pop(&vm->stack);
+
+    ((saw_stack_element_t *) array_ptr)[index] = data;
+    saw_stack_push(&vm->stack, array_ptr);
+}
+
+//TODO: an instruction for getting array contents
+
+void saw_insn_destroy_array(vm_t *vm) {
+    saw_stack_element_t array = saw_stack_pop(&vm->stack);
+    free((saw_stack_element_t *) array);
+}
+
+/**
+ * Reads a basic string from a file.
+ * 
+ * TODO: This needs to be improved, but works for now.
+ * security, read it all at once instead of char by char, support utf, etc.
+ *
+ * Caller must free the returned pointer using free().
+ *
+ * @param fp The file pointer to read from.
+ * @return A string. Must be free()'d.
+ */
+char *read_str(FILE *fp) {
+    saw_byte_t length;
+
+    if(fread(&length, sizeof(length), 1, fp) != sizeof(length))
+        SAW_ERROR("Failed to read string length.");
+
+    if(length < 0) SAW_ERROR("Invalid string length.");
+
+    char *result = calloc(sizeof(char), length);
+
+    char c;
+    for(int i = 0; i < length; i++) {
+        if (fread(&c, sizeof(c), 1, fp) != sizeof(c))
+            SAW_ERROR("Failed to read character in string!");
+
+        result[i] = c;
+    }
+
+    return result;
+}
+
+void saw_insn_call(vm_t *vm) {
+    saw_byte_t call_type;
+    if(fread(&call_type, sizeof(call_type), 1, vm->fp) != sizeof(call_type)) SAW_ERROR("Failed to read call type!");
+
+    char *fn_name = read_str(vm->fp);
+    char *fn_desc = read_str(vm->fp);
+
+    //TODO: call the function.
+    printf("[saw-vm]: Calling function with call_type=%d, fn=%s, desc=%s\n", call_type, fn_name, fn_desc);
 }
 
 void saw_insn_halt(vm_t *vm) {

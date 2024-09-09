@@ -1,3 +1,4 @@
+#TODO: add better string support
 from csv import DictReader
 from argparse import ArgumentParser
 
@@ -53,7 +54,11 @@ with open(args.input_file, "r", encoding='utf-8') as source_fp:
             out.append(get_opcode_by_name(opcode))
 
             for arg in spl[1:]:
-                if arg.startswith("%"):
+                if arg.startswith("\""):
+                    out.append(len(arg) - 2)
+                    for c in arg[1:-1]:
+                        out.append(c.encode('utf-8')[0])
+                elif arg.startswith("%"):
                     out.append(arg)
                 else:
                     out.append(int(arg))
