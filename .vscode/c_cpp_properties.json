@@ -15,7 +15,10 @@
             ],
             "cStandard": "c99",
             "configurationProvider": "none",
-            "mergeConfigurations": true
+            "mergeConfigurations": true,
+            "defines": [
+                "SAW_DEBUG_MODE"
+            ]
         }
     ],
     "version": 4,
